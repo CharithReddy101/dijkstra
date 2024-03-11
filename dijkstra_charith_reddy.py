@@ -4,9 +4,6 @@ import math
 import heapq
 import time
 
-
-start_time = time.time()
-
 # Initializing Pygame
 pygame.init()
  
@@ -14,7 +11,9 @@ pygame.init()
 surface = pygame.display.set_mode((1200,500))
  
 # Initializing Color
-color = (112,128,144)
+# color = (112,128,144)
+color = (0,255,0)
+
 inflation_color = (31, 81, 255)
 exploration_color = (220, 220, 220)
 
@@ -40,14 +39,6 @@ def draw_obstacles():
     c_shape = [(900,50), (1100,50),(1100,450),(900,450),(900,375),(1020,375),(1020,125),(900,125)]
 
 
-    # draw obstacles
-    for i in range(len(rectangles)):
-        obstacle.append([(rectangles[i][0], rectangles[i][1]), (rectangles[i][0] + rectangles[i][2], rectangles[i][1]), (rectangles[i][0] + rectangles[i][2], rectangles[i][1] + rectangles[i][3]), (rectangles[i][0], rectangles[i][1] + rectangles[i][3])])
-    obstacle.append(draw_hexagon((650, 250), 150))
-    obstacle.append(c_shape)
-    # take obstacles and draw them
-    for i in range(len(obstacle)):
-        pygame.draw.polygon(surface, color, obstacle[i])
 
     # add 5 units inflating the obstacles and save them to the inflated_obstacles list
     for i in range(len(rectangles)):
@@ -65,6 +56,14 @@ def draw_obstacles():
         pygame.draw.polygon(surface, inflation_color, map_inflation[i],2)
 
 
+    # draw obstacles
+    for i in range(len(rectangles)):
+        obstacle.append([(rectangles[i][0], rectangles[i][1]), (rectangles[i][0] + rectangles[i][2], rectangles[i][1]), (rectangles[i][0] + rectangles[i][2], rectangles[i][1] + rectangles[i][3]), (rectangles[i][0], rectangles[i][1] + rectangles[i][3])])
+    obstacle.append(draw_hexagon((650, 250), 150))
+    obstacle.append(c_shape)
+    # take obstacles and draw them
+    for i in range(len(obstacle)):
+        pygame.draw.polygon(surface, color, obstacle[i])
 
 
 
@@ -195,15 +194,22 @@ def dijkstra_algorithm(initial_point, goal_point):
 # function to get the initial and goal points from the user
 def get_initial_and_goal_points():
     # get initial and goal points from user as a tuple input 
-    initial_point = tuple(map(int, input("Enter the initial point: ").split()))
-    goal_point = tuple(map(int, input("Enter the goal point: ").split()))
+    initial_point = tuple(map(int, input("Enter the initial point (space separated x y) : ").split()))
+    goal_point = tuple(map(int, input("Enter the goal point (space separated x y) : ").split()))
+    initial_point = (initial_point[0],500-initial_point[1] )
+    goal_point = (goal_point[0],500-goal_point[1] )
+
     # check if the initial and goal points are inside the map
     while is_point_in_obstacle_space(initial_point) or is_point_in_map_inflation(initial_point):
         print("The initial point is inside the obstacle space or outside the map. Please enter a valid point.")
-        initial_point = tuple(map(int, input("Enter the initial point: ").split()))
+        initial_point = tuple(map(int, input("Enter the initial point: ").split()))    
+        initial_point = (initial_point[0],500-initial_point[1] )
     while is_point_in_obstacle_space(goal_point) or is_point_in_map_inflation(goal_point):
         print("The goal point is inside the obstacle space or outside the map. Please enter a valid point.")
+        
         goal_point = tuple(map(int, input("Enter the goal point: ").split()))
+        goal_point = (goal_point[0],500-goal_point[1] )
+
     return initial_point, goal_point
 
 
@@ -217,8 +223,6 @@ def main():
     initial_point, goal_point = get_initial_and_goal_points()
     print("The initial point is: ", initial_point)
     print("The goal point is: ", goal_point)
-    # initial_point= (400,50)
-    # goal_point = (450,80)
 
     pygame.draw.circle(surface, (0,255,0), initial_point, 5)
     pygame.draw.circle(surface, (255,0,0), goal_point, 5)
@@ -229,7 +233,6 @@ def main():
     et = time.time()
 
     print("The algorithm took  %s seconds to find the path" % (et - st))
-
 
     if path:
         for i in range(len(path) - 1):
