@@ -11,9 +11,7 @@ pygame.init()
 surface = pygame.display.set_mode((1200,500))
  
 # Initializing Color
-# color = (112,128,144)
-color = (0,255,0)
-
+color = (112,128,144)
 inflation_color = (31, 81, 255)
 exploration_color = (220, 220, 220)
 
@@ -236,7 +234,7 @@ def main():
 
     if path:
         for i in range(len(path) - 1):
-            pygame.draw.line(surface, (34,139,34), path[i], path[i + 1], 2)
+            pygame.draw.line(surface, (0,255,0), path[i], path[i + 1], 5)
         pygame.display.update()
         while True:
             for event in pygame.event.get():
